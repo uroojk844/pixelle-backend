@@ -1,4 +1,9 @@
 <?php
 $jsonData = file_get_contents('php://input');
-$data = json_decode($jsonData, true);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+   $data = json_decode($jsonData, true);
+}else{
+    echo "Invalid request method";
+    die();
+}
 ?>

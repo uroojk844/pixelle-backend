@@ -1,4 +1,9 @@
 <?php
 include_once("../../config.php");
-print_r($data['dfds']);
+    if(isset($data['name'])){
+        print_r($data);
+    }
+    else{
+        echo "error";
+    }
 ?>
