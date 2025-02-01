@@ -1,6 +1,6 @@
 <?php
     include_once("../../../config.php");
-    include("../../../utils.php");
+    require("../../../utils.php");
 
     $fields = array("fullname","email","password");
     
@@ -20,7 +20,11 @@
             $username =  str_replace(" ","",$fullname).rand(100,999);
             $insertQuery = "INSERT INTO users(fullname,username,email,password) values ('$fullname','$username','$email','$password')";
             //save user
-            if($conn->query($insertQuery)) echo json_encode(["success"=>"Account created!"]);
+            if($conn->query($insertQuery)){
+                sendRegistrationEmail($email,$fullname);
+                echo json_encode(["success"=>"Account created!"]);
+            } 
+                
             else echo json_encode(["error"=>"Something went wrong!"]);
         }
         
