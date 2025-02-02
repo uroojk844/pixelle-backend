@@ -1,5 +1,4 @@
 <?php
     include_once("config.php");
-    $user = $_GET['user'];
-    echo $user;
+    // print_r($_SERVER);
 ?>
