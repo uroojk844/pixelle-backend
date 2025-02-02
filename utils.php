@@ -37,7 +37,6 @@
         
             // Send Email
             $mail->send();
-            echo 'Email has been sent successfully!';
         } catch (Exception $e) {
             echo "Email could not be sent. Error: {$mail->ErrorInfo}";
         }

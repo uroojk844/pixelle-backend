@@ -3,7 +3,6 @@
     include("../../../utils.php");
 
     $fields = array("email","password");
-    
     if(validateInput($data,$fields)){
         $email = $data["email"];
         $password = $data["password"];
@@ -11,7 +10,10 @@
         $result = $conn->query($initiateLogin);
         $count = mysqli_num_rows($result);
         if($count==1){
-            echo json_encode(["success"=>"Login sucessful"]);
+            $user = mysqli_fetch_assoc($result);
+            unset($user['password']);
+            setcookie("email",$user['email']); // 86400 = 1 day
+            echo json_encode(["success"=>$user]);
         }
         else{
             echo json_encode(["error"=>"Invalid credentials"]);

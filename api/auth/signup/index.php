@@ -14,7 +14,7 @@
         $result = $conn->query($checkExists);
         $rowCount = mysqli_num_rows($result);
 
-        if($rowCount>0) echo json_encode(["error"=>"This email is already in use!"]);
+        if($rowCount>0) {echo json_encode(["error"=>"This email is already in use!"]);}
         else{
             //generating username
             $username =  str_replace(" ","",$fullname).rand(100,999);
@@ -23,9 +23,10 @@
             if($conn->query($insertQuery)){
                 sendRegistrationEmail($email,$fullname);
                 echo json_encode(["success"=>"Account created!"]);
-            } 
-                
-            else echo json_encode(["error"=>"Something went wrong!"]);
+            }   
+            else {
+                echo json_encode(["error"=>"Something went wrong!"]);
+            }
         }
         
     }
