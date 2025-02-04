@@ -7,7 +7,7 @@ if(isset($_COOKIE['user'])){
     $email = $user[0];
     $id = $user[1];
     
-    $sql = "SELECT * FROM users where email='$email' and id=$id";
+    $sql = "SELECT * FROM users where email='$email' and id='$id'";
     $res = mysqli_query($conn, $sql);
     if(mysqli_num_rows($res)) {
         $row = mysqli_fetch_assoc($res);
@@ -16,5 +16,7 @@ if(isset($_COOKIE['user'])){
     }else{
         echo json_encode(['error'=>'Unauthorize']);
     }
+}else{
+    echo json_encode(['error'=>'Unauthorize']);
 }
 ?>
