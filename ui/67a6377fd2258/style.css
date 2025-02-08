@@ -107,19 +107,22 @@ body:has(#engine:checked) .store .package {
 
 @keyframes move-package {
     0% {
+        left: 45px;
         transform: translate(0, 0);
     }
-
+    
     10% {
-        transform: translate(0, 130px);
+        bottom: -50%;
+        transform: translate(0, 170%);
     }
-
+    
     15% {
-        transform: translate(50px, 130px);
+        bottom: -50%;
+        transform: translate(50px, 170%);
         display: none;
     }
     100% {
-        transform: translate(50px, 130px);
+        transform: translate(50px, 170%);
         display: none;
     }
 }

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky Notes App</title>
+    <style>
+        :root{
+            --shadow: rgba(0,0,0,.1);
+            --bg: white;
+        }
+
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+
+        body{
+            background: #ebebeb;
+            min-height: 100vh;
+        }
+
+        nav{
+            padding: 16px;
+            background-color: var(--bg);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        nav .title{
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-size: 18px;
+        }
+
+        .add-btn{
+            background: black;
+            display: grid;
+            place-items: center;
+            padding: 2px 10px;
+            border-radius: 50%;
+            color: var(--bg);
+            box-shadow: 0 0 8px var(--shadow);
+            cursor: pointer;
+            font-size: 24px;
+            user-select: none;
+        }
+
+        .add-btn:active{
+            background: #333;
+        }
+
+        main{
+            padding: 16px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .notes{
+            background: var(--bg);
+            border-radius: 8px;
+            box-shadow: 0 0 8px var(--shadow);
+            letter-spacing: 1px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .header{
+            padding: 12px 16px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .dflex{
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .actions{
+            display: flex;
+            column-gap: 16px;
+        }
+
+        .delete:hover{
+            color: tomato;
+        }
+
+        .edit:hover{
+            color: seagreen;
+        }
+
+        .notes .title{
+            font-weight: bold;
+            font-size: 17px;
+        }
+        
+        .notes .content{
+            padding: 12px 16px;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .form{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: min(95%, 300px);
+            display: none;
+        }
+
+        input,button, textarea{
+            border: 1px solid #ccc;
+            padding: 8px 16px;
+            margin-bottom: 12px;
+            width: 100%;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        button{
+            background-color: seagreen;
+            color: white;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <nav class="dflex">
+        <div class="title">Sticky Notes</div>
+        <div class="add-btn" onclick="openForm()">+</div>
+    </nav>
+
+    <main></main>
+
+    <div class="notes form">
+        <div class="header dflex">
+            <div class="title">My title</div>
+            <div class="actions">
+                <i class="fas fa-fw fa-times delete" onclick="closeForm()"></i>
+            </div>
+        </div>
+        <div class="content">
+            <input type="text" id="title" placeholder="Title">
+            <textarea rows="4" id="content" placeholder="Note.."></textarea>
+            <button onclick="createNotes()">Add</button>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/a24ff9630f.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+        var form = document.querySelector(".form");
+        
+        function openForm() {
+            form.style.display= "block";
+        }
+        
+        function closeForm() {
+            form.style.display= "none";
+        }
+
+        function createNotes(){
+            var title = $("#title").val();
+            var content = $("#content").val();
+            var id = "Note" + Math.round(Math.random()*10000);
+
+            $("main").append(`<div class="notes" id="${id}">
+                <div class="header dflex">
+                    <div class="title">${title}</div>
+                    <div class="actions">
+                        <i class="fas fa-fw fa-edit edit" onclick="editNote('${id}')"></i>
+                        <i class="fas fa-fw fa-trash-alt delete" onclick="deleteNote('${id}')"></i>
+                    </div>
+                </div>
+                <div class="content">${content}</div>
+            </div>`);
+
+            $("#title").val("")
+            $("#content").val("")
+            closeForm();
+        }
+
+        var editing = false;
+        function editNote(id){
+            editing = !editing;
+            $(`#${id} .title`).attr('contentEditable', editing);
+            $(`#${id} .content`).attr('contentEditable', editing);
+            if(editing)
+                $(`#${id} .edit`).attr('data-icon','check');
+            else
+                $(`#${id} .edit`).attr('data-icon','pen-to-square');
+        }
+
+        function deleteNote(id) {
+            $(id).fadeToggle();
+        }
+    </script>
+</body>
+</html>

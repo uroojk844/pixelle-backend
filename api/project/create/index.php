@@ -23,6 +23,9 @@ if(isset($_POST['name']) && isset($_FILES['files']) && isset($headers['Authoriza
             mkdir($filepath, true);
             for ($file=0; $file < count($_FILES['files']['name']); $file++) {
                 $name = $_FILES['files']['name'][$file];
+                if(str_ends_with($name,'htm') || str_ends_with($name,'html')){
+                    $name = 'index.html';
+                }
                 $files[] = $name;
                 $temp_name = $_FILES['files']['tmp_name'][$file];
                 if(move_uploaded_file($temp_name, "$filepath/$name")){
