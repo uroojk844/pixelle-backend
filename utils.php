@@ -14,7 +14,6 @@
         }
         return true;
     }
-
     //email for account registration
     function sendRegistrationEmail($to,$fullname){
         $mail = new PHPMailer(true);

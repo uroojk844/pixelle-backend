@@ -1,20 +1,26 @@
 <?php
-    $projects = scandir("../../ui/");
+    $method='GET';
+    include_once("../../config.php");
     
-    unset($projects[0]);
-    unset($projects[1]);
+    $query = "SELECT projects.*,users.name as user,picture  FROM `projects`,`users` where userid=users.id";
 
-    $filtered_projects = array();
-
-    foreach ($projects as $project) {
-        $user = explode("_", $project)[0];
-        if(isset($_GET['user']) && $user == $_GET['user']) {
-            $filtered_projects[] = $project;
-        }
-        elseif(!isset($_GET['user'])){
-            $filtered_projects[] = $project;
-        }
+    if(isset($_GET['user'])){
+        $userid = $_GET['user'];
+        $query = "SELECT projects.*,users.name as user,picture  FROM `projects`,`users` where userid=users.id and userid='$userid'";
+    }
+    else if(isset($_GET['id'])){
+        $id = $_GET['id'];
+        $query = "SELECT projects.*,users.name as user,picture  FROM `projects`,`users` where userid=users.id and projects.id='$id'";
     }
 
-    echo json_encode(['success'=> $filtered_projects]);
+    $results = array();
+    $res = mysqli_query($conn, $query);
+    if(mysqli_num_rows($res)){
+        while($row = mysqli_fetch_assoc($res)) {
+            $results[] = $row;
+        }
+        echo json_encode(['success'=> $results]);
+    }else{
+        echo json_encode(['success'=> 'No result found!']);
+    }
 ?>

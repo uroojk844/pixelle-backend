@@ -1,9 +1,10 @@
 <?php
 $method = 'POST';
 include_once("../../config.php");
+$headers = apache_request_headers();
 
-if(isset($_COOKIE['user'])){
-    $user = explode("|",$_COOKIE['user']);
+if(isset($headers['Authorization'])){
+    $user = explode("|",$headers['Authorization']);
     $email = $user[0];
     $id = $user[1];
     
