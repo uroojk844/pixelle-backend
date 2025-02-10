@@ -2,15 +2,15 @@
     $method='GET';
     include_once("../../config.php");
     
-    $query = "SELECT projects.*,users.name as user,picture  FROM `projects`,`users` where userid=users.id";
+    $query = "SELECT projects.*,users.name as user,picture  FROM `projects`,`users` where visibility='public' and userid=users.id";
 
     if(isset($_GET['user'])){
         $userid = $_GET['user'];
-        $query = "SELECT projects.*,users.name as user,picture  FROM `projects`,`users` where userid=users.id and userid='$userid'";
+        $query = "SELECT projects.*,users.name as user,picture  FROM `projects`,`users` where visibility='public' and userid=users.id and userid='$userid'";
     }
     else if(isset($_GET['id'])){
         $id = $_GET['id'];
-        $query = "SELECT projects.*,users.name as user,picture  FROM `projects`,`users` where userid=users.id and projects.id='$id'";
+        $query = "SELECT projects.*,users.name as user,picture  FROM `projects`,`users` where visibility='public' and userid=users.id and projects.id='$id'";
     }
 
     $results = array();
