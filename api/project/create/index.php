@@ -14,20 +14,32 @@ if(isset($_POST['name']) && isset($_FILES['files']) && isset($headers['Authoriza
         $dir = "../../../ui";
         if(!file_exists($dir)) mkdir($dir);
         
-        $projectID = uniqid();
+        $projectID = isset($_POST['id']) ? $_POST['id'] : uniqid();
+        $visibility = isset($_POST['visibility']) ? $_POST['visibility'] : 'public';
+
         $filepath = "$dir/$projectID";
         $files = array();
 
         $uploaded = false;
         if(!file_exists($filepath)){
-            mkdir($filepath, true);
-            for ($file=0; $file < count($_FILES['files']['name']); $file++) {
-                $name = $_FILES['files']['name'][$file];
-                if(str_ends_with($name,'htm') || str_ends_with($name,'html')){
-                    $name = 'index.html';
+            mkdir($filepath, 0755, true);
+
+            if(is_array($_FILES['files']['name'])){
+                for ($file=0; $file < count($_FILES['files']['name']); $file++) {
+                    $name = $_FILES['files']['name'][$file];
+                    if(str_ends_with($name,'htm') || str_ends_with($name,'html')){
+                        $name = 'index.html';
+                    }
+                    $files[] = $name;
+                    $temp_name = $_FILES['files']['tmp_name'][$file];
+                    if(move_uploaded_file($temp_name, "$filepath/$name")){
+                        $uploaded = true;
+                    }else $uploaded = false;
                 }
+            }else{
+                $name = $_FILES['files']['name'];
                 $files[] = $name;
-                $temp_name = $_FILES['files']['tmp_name'][$file];
+                $temp_name = $_FILES['files']['tmp_name'];
                 if(move_uploaded_file($temp_name, "$filepath/$name")){
                     $uploaded = true;
                 }else $uploaded = false;
@@ -35,7 +47,7 @@ if(isset($_POST['name']) && isset($_FILES['files']) && isset($headers['Authoriza
             if($uploaded){
                 // updating in data base
                 $files = implode(",",$files);
-                $query = "INSERT INTO `projects`(`id`, `userid`, `files`, `name`, `tags`) values('$projectID', '$userid', '$files', '$title', '$tags')";
+                $query = "INSERT INTO `projects`(`id`, `userid`, `files`, `name`, `tags`,`visibility`) values('$projectID', '$userid', '$files', '$title', '$tags','$visibility')";
                 if(mysqli_query($conn, $query)) {
                     echo json_encode(['success'=>['message'=>'File uploaded successfully!','id'=>$projectID]]);
                 }else{
@@ -49,7 +61,6 @@ if(isset($_POST['name']) && isset($_FILES['files']) && isset($headers['Authoriza
         }
     }
 }else{
-    print_r($data['name']);
     echo json_encode(['error'=>'Required fileds are missing!']);
 }
 ?>
