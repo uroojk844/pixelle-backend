@@ -1,14 +1,10 @@
 <?php
 $method = 'POST';
 include_once("../../config.php");
-$headers = apache_request_headers();
+include_once("../../user_header.php");
 
-if(isset($headers['Authorization'])){
-    $user = explode("|",$headers['Authorization']);
-    $email = $user[0];
-    $id = $user[1];
-    
-    $sql = "SELECT * FROM users where email='$email' and id='$id'";
+if(isset($headers['user'])){
+    $sql = "SELECT * FROM users where email='$email' and id='$userid'";
     $res = mysqli_query($conn, $sql);
     if(mysqli_num_rows($res)) {
         $row = mysqli_fetch_assoc($res);

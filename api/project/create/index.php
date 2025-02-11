@@ -1,11 +1,9 @@
 <?php
 include_once("../../../config.php");
+include_once("../../../user_header.php");
 
-$headers = apache_request_headers();
 
-if(isset($_POST['name']) && isset($_FILES['files']) && isset($headers['Authorization'])){
-    $user = explode("|",$headers['Authorization']);
-    $userid = $user[1];
+if(isset($_POST['name']) && isset($_FILES['files']) && isset($headers['user'])){
     $title = $_POST['name'];
     $tags = $_POST['tags'];
 

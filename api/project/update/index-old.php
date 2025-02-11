@@ -7,28 +7,22 @@ if (isset($_POST['name']) && isset($headers['user'])) {
 
     $title = $_POST['name'];
     $tags = $_POST['tags'];
+
     $projectID = $_POST['id'];
     $visibility = $_POST['visibility'];
 
     $filepath = "$dir/$projectID";
 
-    // Use prepared statements for ALL database interactions
-    $stmt_insert = $conn->prepare("INSERT INTO `projects`(`id`, `userid`, `name`, `tags`,`visibility`) VALUES (?, ?, ?, ?, ?)");
-    $stmt_update = $conn->prepare("UPDATE `projects` SET `files`=?, `name`=?, `tags`=?, `visibility`=? WHERE `id`=? AND `userid`=?");
-
 
     if (!file_exists($filepath)) {
         mkdir($filepath, 0755, true);
-        $stmt_insert->bind_param("sssss", $projectID, $userid, $title, $tags, $visibility); // Bind parameters
-        if (!$stmt_insert->execute()) {
-            echo json_encode(['error' => 'Database error: ' . $stmt_insert->error]); // Proper error message
-            exit; // Stop execution on error
-        }
-        $stmt_insert->close();
+        $query = "INSERT INTO `projects`(`id`, `userid`, `name`, `tags`,`visibility`) values('$projectID', '$userid', '$title', '$tags','$visibility')";
+        mysqli_query($conn, $query);
     }
 
-    $files = [];
+    $files = array();
 
+    var_dump($_POST);
     if (isset($_POST['html'])) {
         $htmlFile = fopen("$filepath/index.html", 'w');
         chmod("$filepath/index.html", 0644);
@@ -54,17 +48,13 @@ if (isset($_POST['name']) && isset($headers['user'])) {
     }
 
     $files = implode(",", $files);
-
-    $stmt_update->bind_param("ssssss", $files, $title, $tags, $visibility, $projectID, $userid); // Bind parameters
-    if ($stmt_update->execute()) {
+    var_dump($files);
+    $query = "UPDATE `projects` set `files`='$files',`name`='$title',`tags`='$tags',`visibility`='$visibility' where `id`='$projectID' and `userid`='$userid'";
+    if (mysqli_query($conn, $query)) {
         echo json_encode(['success' => ['message' => 'File saved successfully!', 'id' => $projectID]]);
     } else {
-        echo json_encode(['error' => 'Database update error: ' . $stmt_update->error]); // Proper error message
+        echo json_encode(['error' => 'Something went wrong!']);
     }
-    $stmt_update->close();
-    $conn->close(); // Close the connection
-
 } else {
-    echo json_encode(['error' => 'Required fields are missing!']);
+    echo json_encode(['error' => 'Required fileds are missing!']);
 }
-?>
