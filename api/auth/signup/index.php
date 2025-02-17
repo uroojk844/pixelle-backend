@@ -2,12 +2,12 @@
     include_once("../../../config.php");
     require("../../../utils.php");
 
-    $fields = array("fullname","email","password","id");
+    $fields = array("name","email","password","id");
     
     if(validateInput($data,$fields)){
         $email = $data['email'];
         $password = $data['password'];
-        $name = $data['fullname'];
+        $name = $data['name'];
         $id = $data['id'];
         
         //checking is account exists already
