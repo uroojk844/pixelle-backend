@@ -6,7 +6,7 @@ if (isset($_POST['name']) && isset($headers['user'])) {
     $dir = "../../../ui";
 
     $title = $_POST['name'];
-    $tags = $_POST['tags'];
+    $tags = isset($_POST['tags']) ? $_POST['tags'] : '';
     $projectID = $_POST['id'];
     $visibility = $_POST['visibility'];
 
